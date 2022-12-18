@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-project(03_chapter4-5 CXX)
+project(OpenGL_Tutorial CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
