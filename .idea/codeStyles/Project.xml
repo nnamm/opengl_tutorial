@@ -24,5 +24,46 @@
         <option name="ITERATION_ELEMENTS_WRAPPING" value="chop_down_if_not_single" />
       </formatting-settings>
     </DBN-SQL>
+    <HTMLCodeStyleSettings>
+      <option name="HTML_UNIFORM_INDENT" value="true" />
+      <option name="HTML_DO_NOT_INDENT_CHILDREN_OF" value="theapppd,tbody,tfoot" />
+    </HTMLCodeStyleSettings>
+    <clangFormatSettings>
+      <option name="ENABLED" value="true" />
+    </clangFormatSettings>
+    <codeStyleSettings language="CSS">
+      <indentOptions>
+        <option name="INDENT_SIZE" value="2" />
+        <option name="CONTINUATION_INDENT_SIZE" value="2" />
+        <option name="TAB_SIZE" value="2" />
+      </indentOptions>
+    </codeStyleSettings>
+    <codeStyleSettings language="HTML">
+      <indentOptions>
+        <option name="INDENT_SIZE" value="2" />
+        <option name="CONTINUATION_INDENT_SIZE" value="2" />
+        <option name="TAB_SIZE" value="2" />
+      </indentOptions>
+    </codeStyleSettings>
+    <codeStyleSettings language="JavaScript">
+      <indentOptions>
+        <option name="INDENT_SIZE" value="2" />
+        <option name="CONTINUATION_INDENT_SIZE" value="2" />
+        <option name="TAB_SIZE" value="2" />
+      </indentOptions>
+    </codeStyleSettings>
+    <codeStyleSettings language="SCSS">
+      <indentOptions>
+        <option name="CONTINUATION_INDENT_SIZE" value="2" />
+        <option name="TAB_SIZE" value="2" />
+      </indentOptions>
+    </codeStyleSettings>
+    <codeStyleSettings language="TypeScript">
+      <indentOptions>
+        <option name="INDENT_SIZE" value="2" />
+        <option name="CONTINUATION_INDENT_SIZE" value="2" />
+        <option name="TAB_SIZE" value="2" />
+      </indentOptions>
+    </codeStyleSettings>
   </code_scheme>
 </component>
