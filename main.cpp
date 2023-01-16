@@ -156,9 +156,9 @@ bool loadProgram(const char *vert, const char *frag) {
 //  Rectangle vertex position
 constexpr Object::Vertex rectangleVertex[] = {
     {-0.5f, -0.5f},
-    {0.5f, -0.5f},
-    {0.5f, 0.5f},
-    {-0.5f, 0.5f},
+    {1.5f, -0.5f},
+    {1.5f, 1.5f},
+    {-0.5f, 1.5f},
 };
 
 int main() {
@@ -199,6 +199,9 @@ int main() {
 
     // Set background color
     glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+
+    // Set viewport
+    glViewport(100, 50, 300, 300);
 
     // Create program object
     const GLuint program(loadProgram("point.vert", "point.frag"));
