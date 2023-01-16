@@ -1,4 +1,5 @@
 #include "Shape.h"
+#include "window.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <cstdlib>
@@ -176,32 +177,10 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    // Create Window
-    GLFWwindow *const window(glfwCreateWindow(640, 480, "Hello", nullptr, nullptr));
-    if (window == nullptr) {
-        std::cerr << "Can't create GLFW window" << std::endl;
-        glfwTerminate();
-        return 1;
-    }
-
-    // Make the created window an OpenGL target
-    glfwMakeContextCurrent(window);
-
-    // Initialize GLEW
-    glewExperimental = GL_TRUE;
-    if (glewInit() != GLEW_OK) {
-        std::cerr << "Can't initialize GLEW" << std::endl;
-        return 1;
-    }
-
-    // Wait for V-sync timing
-    glfwSwapInterval(1);
+    Window window;
 
     // Set background color
     glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
-
-    // Set viewport
-    glViewport(100, 50, 300, 300);
 
     // Create program object
     const GLuint program(loadProgram("point.vert", "point.frag"));
@@ -210,7 +189,7 @@ int main() {
     std::unique_ptr<const Shape> shape(new Shape(2, 4, rectangleVertex));
 
     // Repeat while the window is open
-    while (glfwWindowShouldClose(window) == GL_FALSE) {
+    while (window) {
         // Clear the window
         glClear(GL_COLOR_BUFFER_BIT);
 
@@ -221,9 +200,6 @@ int main() {
         shape->draw();
 
         // Replace the color buffer
-        glfwSwapBuffers(window);
-
-        // Extract events
-        glfwWaitEvents();
+        window.swapBuffers();
     }
 }
