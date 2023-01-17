@@ -10,7 +10,7 @@ class Window {
 
   public:
     // Constructor
-    Window(int width = 640, int height = 480, const char *title = "Hello!")
+    explicit Window(int width = 640, int height = 480, const char *title = "Hello!")
         : window(glfwCreateWindow(width, height, title, nullptr, nullptr)) {
         if (window == nullptr) {
             // can not create window
