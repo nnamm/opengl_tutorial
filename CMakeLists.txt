@@ -9,7 +9,7 @@ if (APPLE)
 elseif (UNIX)
 endif ()
 
-add_executable(sample main.cpp Object.h Shape.h)
+add_executable(sample main.cpp Object.h Shape.h window.h)
 
 target_compile_options(sample PRIVATE -g -Wall)
 
