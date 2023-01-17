@@ -157,9 +157,9 @@ bool loadProgram(const char *vert, const char *frag) {
 //  Rectangle vertex position
 constexpr Object::Vertex rectangleVertex[] = {
     {-0.5f, -0.5f},
-    {1.5f, -0.5f},
-    {1.5f, 1.5f},
-    {-0.5f, 1.5f},
+    {0.5f, -0.5f},
+    {0.5f, 0.5f},
+    {-0.5f, 0.5f},
 };
 
 int main() {
@@ -185,6 +185,10 @@ int main() {
     // Create program object
     const GLuint program(loadProgram("point.vert", "point.frag"));
 
+    // Get uniform variables location
+    const GLint sizeLoc(glGetUniformLocation(program, "size"));
+    const GLint scaleLoc(glGetUniformLocation(program, "scale"));
+
     // Create graphic data
     std::unique_ptr<const Shape> shape(new Shape(2, 4, rectangleVertex));
 
@@ -196,7 +200,11 @@ int main() {
         // Start using shader program
         glUseProgram(program);
 
-        // rendering process
+        // Set the value to uniform variables
+        glUniform2fv(sizeLoc, 1, window.getSize());
+        glUniform1f(scaleLoc, window.getScale());
+
+        // Drawing shape
         shape->draw();
 
         // Replace the color buffer

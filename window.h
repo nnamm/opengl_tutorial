@@ -7,11 +7,15 @@
 class Window {
     // Window handle
     GLFWwindow *const window;
+    // Window size
+    GLfloat size[2]{};
+    // Scale factor of device coordinate system relative to world coordinate system
+    GLfloat scale;
 
   public:
     // Constructor
     explicit Window(int width = 640, int height = 480, const char *title = "Hello!")
-        : window(glfwCreateWindow(width, height, title, nullptr, nullptr)) {
+        : window(glfwCreateWindow(width, height, title, nullptr, nullptr)), scale(100.0f) {
         if (window == nullptr) {
             // can not create window
             std::cerr << "Can't create GLFW window." << std::endl;
@@ -31,6 +35,9 @@ class Window {
 
         // Wait for the vertical sync timing
         glfwSwapInterval(1);
+
+        // Record this pointer of this instance
+        glfwSetWindowUserPointer(window, this);
 
         // Register callback process when the window is resized
         glfwSetWindowSizeCallback(window, resize);
@@ -60,7 +67,22 @@ class Window {
         // Find the size of the frame buffer
         int fbWidth, fbHeight;
         glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
+
         // set the entire frame buffer to be viewport
         glViewport(0, 0, fbWidth, fbHeight);
+
+        // Get this pointer for this instance
+        auto *const instance(static_cast<Window *>(glfwGetWindowUserPointer(window)));
+        if (instance != nullptr) {
+            // Save the size of the opened window
+            instance->size[0] = static_cast<GLfloat>(width);
+            instance->size[1] = static_cast<GLfloat>(height);
+        }
     }
+
+    // Retrieve the window size
+    [[nodiscard]] const GLfloat *getSize() const { return size; }
+
+    // Retrieve the scale factor
+    [[nodiscard]] GLfloat getScale() const { return scale; }
 };

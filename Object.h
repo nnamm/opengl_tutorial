@@ -3,10 +3,10 @@
 
 class Object {
     // Vertex array object name
-    GLuint vao;
+    GLuint vao{};
 
     // Vertex buffer object name
-    GLuint vbo;
+    GLuint vbo{};
 
   public:
     // Vertex attribute
