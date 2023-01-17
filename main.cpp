@@ -188,6 +188,7 @@ int main() {
     // Get uniform variables location
     const GLint sizeLoc(glGetUniformLocation(program, "size"));
     const GLint scaleLoc(glGetUniformLocation(program, "scale"));
+    const GLint locationLoc(glGetUniformLocation(program, "location"));
 
     // Create graphic data
     std::unique_ptr<const Shape> shape(new Shape(2, 4, rectangleVertex));
@@ -203,6 +204,7 @@ int main() {
         // Set the value to uniform variables
         glUniform2fv(sizeLoc, 1, window.getSize());
         glUniform1f(scaleLoc, window.getScale());
+        glUniform2fv(locationLoc, 1, window.getLocation());
 
         // Drawing shape
         shape->draw();
