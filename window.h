@@ -39,11 +39,15 @@ class Window {
         // Wait for the vertical sync timing
         glfwSwapInterval(1);
 
+        // Register callback process when the window is resized
+        glfwSetWindowSizeCallback(window, resize);
+
+        // Register callback process when the mouse wheel is operated
+        glfwSetScrollCallback(window, wheel);
+
         // Record this pointer of this instance
         glfwSetWindowUserPointer(window, this);
 
-        // Register callback process when the window is resized
-        glfwSetWindowSizeCallback(window, resize);
         // Initial settings for opened window
         resize(window, width, height);
     }
@@ -56,13 +60,16 @@ class Window {
         // Extract events
         glfwWaitEvents();
 
-        // Get mouse position
-        double x, y;
-        glfwGetCursorPos(window, &x, &y);
+        // Check left mouse button
+        if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) != GLFW_RELEASE) {
+            // Get mouse cursor position if the left mouse button is pressed
+            double x, y;
+            glfwGetCursorPos(window, &x, &y);
 
-        // Find the mouse cursor's position on the normalized device coordinate system
-        location[0] = static_cast<GLfloat>(x) * 2.0f / size[0] - 1.0f;
-        location[1] = 1.0f - static_cast<GLfloat>(y) * 2.0f / size[1];
+            // Find the mouse cursor's position on the normalized device coordinate system
+            location[0] = static_cast<GLfloat>(x) * 2.0f / size[0] - 1.0f;
+            location[1] = 1.0f - static_cast<GLfloat>(y) * 2.0f / size[1];
+        }
 
         // Return true if the window does not need to be closed
         return !glfwWindowShouldClose(window);
@@ -75,7 +82,7 @@ class Window {
     }
 
     // Handling of window resizing
-    static void resize(GLFWwindow *const window, int width, int height) {
+    static void resize(GLFWwindow *window, int width, int height) {
         // Find the size of the frame buffer
         int fbWidth, fbHeight;
         glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
@@ -89,6 +96,17 @@ class Window {
             // Save the size of the opened window
             instance->size[0] = static_cast<GLfloat>(width);
             instance->size[1] = static_cast<GLfloat>(height);
+        }
+    }
+
+    // Handling of mouse wheel operating
+    static void wheel(GLFWwindow *window, double x, double y) {
+        // Get this pointer for this instance
+        auto *const instance(static_cast<Window *>(glfwGetWindowUserPointer(window)));
+        if (instance != nullptr) {
+            // Update the scaling factor(x5) of the device coordinate system
+            // relative to the world coordinate system
+            instance->scale += static_cast<GLfloat>(y) * 5;
         }
     }
 
