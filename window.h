@@ -11,11 +11,14 @@ class Window {
     GLfloat size[2]{};
     // Scale factor of device coordinate system relative to world coordinate system
     GLfloat scale;
+    // Location on the normalized device coordinate system of the figure
+    GLfloat location[2];
 
   public:
     // Constructor
     explicit Window(int width = 640, int height = 480, const char *title = "Hello!")
-        : window(glfwCreateWindow(width, height, title, nullptr, nullptr)), scale(100.0f) {
+        : window(glfwCreateWindow(width, height, title, nullptr, nullptr)), scale(100.0f), location{0.0f, 0.0f} {
+
         if (window == nullptr) {
             // can not create window
             std::cerr << "Can't create GLFW window." << std::endl;
@@ -52,6 +55,15 @@ class Window {
     explicit operator bool() {
         // Extract events
         glfwWaitEvents();
+
+        // Get mouse position
+        double x, y;
+        glfwGetCursorPos(window, &x, &y);
+
+        // Find the mouse cursor's position on the normalized device coordinate system
+        location[0] = static_cast<GLfloat>(x) * 2.0f / size[0] - 1.0f;
+        location[1] = 1.0f - static_cast<GLfloat>(y) * 2.0f / size[1];
+
         // Return true if the window does not need to be closed
         return !glfwWindowShouldClose(window);
     }
@@ -85,4 +97,7 @@ class Window {
 
     // Retrieve the scale factor
     [[nodiscard]] GLfloat getScale() const { return scale; }
+
+    // Retrieve the position
+    [[nodiscard]] const GLfloat *getLocation() const { return location; }
 };
