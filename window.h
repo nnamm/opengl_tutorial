@@ -13,11 +13,14 @@ class Window {
     GLfloat scale;
     // Location on the normalized device coordinate system of the figure
     GLfloat location[2];
+    // Key status
+    int keyStatus;
 
   public:
     // Constructor
     explicit Window(int width = 640, int height = 480, const char *title = "Hello!")
-        : window(glfwCreateWindow(width, height, title, nullptr, nullptr)), scale(100.0f), location{0.0f, 0.0f} {
+        : window(glfwCreateWindow(width, height, title, nullptr, nullptr)), scale(100.0f), location{0.0f, 0.0f},
+          keyStatus(GLFW_RELEASE) {
 
         if (window == nullptr) {
             // can not create window
@@ -45,6 +48,9 @@ class Window {
         // Register callback process when the mouse wheel is operated
         glfwSetScrollCallback(window, wheel);
 
+        // Register callback process at the time of keyboard operation
+        glfwSetKeyCallback(window, keyboard);
+
         // Record this pointer of this instance
         glfwSetWindowUserPointer(window, this);
 
@@ -58,7 +64,10 @@ class Window {
     // Continuation check of the drawing loop
     explicit operator bool() {
         // Extract events
-        glfwPollEvents();
+        if (keyStatus == GLFW_RELEASE)
+            glfwWaitEvents();
+        else
+            glfwPollEvents();
 
         // Check keyboard status
         if (glfwGetKey(window, GLFW_KEY_LEFT) != GLFW_RELEASE)
@@ -117,6 +126,16 @@ class Window {
             // Update the scaling factor(x5) of the device coordinate system
             // relative to the world coordinate system
             instance->scale += static_cast<GLfloat>(y) * 5;
+        }
+    }
+
+    // Handling of keyboard operating
+    static void keyboard(GLFWwindow *window, int key, int scancode, int action, int mods) {
+        // Get this pointer for this instance
+        auto *const instance(static_cast<Window *>(glfwGetWindowUserPointer(window)));
+        if (instance != nullptr) {
+            // Save key status
+            instance->keyStatus = action;
         }
     }
 
