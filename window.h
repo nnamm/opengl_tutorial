@@ -64,10 +64,13 @@ class Window {
     // Continuation check of the drawing loop
     explicit operator bool() {
         // Extract events
-        if (keyStatus == GLFW_RELEASE)
-            glfwWaitEvents();
-        else
-            glfwPollEvents();
+        // the following code are commented out because
+        // it is trapped on the screen during keystrokes
+        //        if (keyStatus == GLFW_RELEASE)
+        //            glfwWaitEvents();
+        //        else
+        //            glfwPollEvents();
+        glfwPollEvents();
 
         // Check keyboard status
         if (glfwGetKey(window, GLFW_KEY_LEFT) != GLFW_RELEASE)
