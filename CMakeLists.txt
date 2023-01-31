@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.22)
 project(OpenGL_Tutorial CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 if (APPLE)
     include_directories(/usr/local/include)
@@ -11,7 +11,7 @@ endif ()
 
 add_executable(sample main.cpp Object.h Shape.h window.h)
 
-target_compile_options(sample PRIVATE -g -Wall)
+target_compile_options(sample PRIVATE -g -Wall --pedantic-errors)
 
 if (APPLE)
     target_link_libraries(
