@@ -21,4 +21,17 @@ class Matrix {
 
     // Returns an array of transformation matrices
     [[nodiscard]] const GLfloat *data() const { return matrix; }
+
+    // Set the unit matrix
+    void loadIdentity() {
+        std::fill(matrix, matrix + 16, 0.0f);
+        matrix[0] = matrix[5] = matrix[10] = matrix[15] = 1.0f;
+    }
+
+    // Create the unit matrix
+    static Matrix identity() {
+        Matrix t;
+        t.loadIdentity();
+        return t;
+    }
 };
