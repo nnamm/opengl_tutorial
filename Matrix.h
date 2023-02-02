@@ -34,4 +34,24 @@ class Matrix {
         t.loadIdentity();
         return t;
     }
+
+    // Create a transformation matrix that translates by (x, y, z)
+    static Matrix translate(GLfloat x, GLfloat y, GLfloat z) {
+        Matrix t;
+        t.loadIdentity();
+        t[12] = x;
+        t[13] = y;
+        t[14] = z;
+        return t;
+    }
+
+    // Create a transformation matrix that scales (x, y, z) times
+    static Matrix scale(GLfloat x, GLfloat y, GLfloat z) {
+        Matrix t;
+        t.loadIdentity();
+        t[0] = x;
+        t[5] = y;
+        t[10] = z;
+        return t;
+    }
 };
