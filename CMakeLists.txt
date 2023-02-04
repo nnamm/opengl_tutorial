@@ -22,8 +22,7 @@ if (APPLE)
 elseif (UNIX)
     target_link_libraries(
             sample glfw GLEW GL
-            Xrandr Xcursor Xi
-            Xxf86vm X11 pthread rt m dl
+            Xcursor Xinerama Xrandr Xi Xxf86vm X11 pthread rt m dl
     )
 endif ()
 
