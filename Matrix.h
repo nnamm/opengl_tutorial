@@ -81,4 +81,15 @@ class Matrix {
 
         return t;
     }
+
+    // Multiplication
+    Matrix operator*(const Matrix &m) const {
+        Matrix t;
+        for (int i = 0; i < 16; i++) {
+            const int j(i & 3), k(i & ~3);
+            t[i] = matrix[0 + j] * m[k + 0] + matrix[4 + j] * m[k + 1] + matrix[8 + j] * m[k + 2] +
+                   matrix[12 + j] * m[k + 3];
+        }
+        return t;
+    }
 };
