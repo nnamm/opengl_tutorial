@@ -206,10 +206,14 @@ int main() {
         const Matrix scaling(Matrix::scale(scale / size[0], scale / size[1], 1.0f));
 
         // Calculate the transformation matrix of translation
+        const GLfloat *const position(window.getLocation());
+        const Matrix translation(Matrix::translate(position[0], position[1], 0.0f));
 
         // Calculate the model transformation matrix
+        const Matrix model(translation * scaling);
 
         // Set a value to uniform variable
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, model.data());
 
         // Drawing shape
         shape->draw();
