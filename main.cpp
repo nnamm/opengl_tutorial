@@ -187,7 +187,7 @@ int main() {
     const GLuint program(loadProgram("point.vert", "point.frag"));
 
     // Get uniform variable location
-    const GLint modelLoc(glGetUniformLocation(program, "model"));
+    const GLint modelviewLoc(glGetUniformLocation(program, "modelview"));
 
     // Create graphic data
     std::unique_ptr<const Shape> shape(new Shape(2, 4, rectangleVertex));
@@ -212,8 +212,14 @@ int main() {
         // Calculate the model transformation matrix
         const Matrix model(translation * scaling);
 
+        // Calculate the view transformation matrix
+        const Matrix view(Matrix::lookat(0.0f, 0.0f, 0.0f, -1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f));
+
+        // Calculate the model view transformation matrix
+        const Matrix modelview(view * model);
+
         // Set a value to uniform variable
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, model.data());
+        glUniformMatrix4fv(modelviewLoc, 1, GL_FALSE, modelview.data());
 
         // Drawing shape
         shape->draw();

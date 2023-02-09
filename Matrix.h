@@ -82,6 +82,61 @@ class Matrix {
         return t;
     }
 
+    // Create view transformation matrix
+    static Matrix lookat(GLfloat ex, GLfloat ey, GLfloat ez, // Position of viewpoint
+                         GLfloat gx, GLfloat gy, GLfloat gz, // Location of target point
+                         GLfloat ux, GLfloat uy, GLfloat uz  // Upward vector
+    ) {
+        // Transformation matrix of translate
+        const Matrix tv(translate(-ex, -ey, -ez));
+
+        // Axis-t = e - g
+        const GLfloat tx(ex - gx);
+        const GLfloat ty(ey - gy);
+        const GLfloat tz(ez - gz);
+
+        // Axis-r = u * t axis
+        const GLfloat rx(uy * tz - uz * ty);
+        const GLfloat ry(uz * tx - ux * tz);
+        const GLfloat rz(ux * ty - uy * tx);
+
+        // Axis-s = Axis-t * Axis-r
+        const GLfloat sx(ty * rz - tz * ry);
+        const GLfloat sy(tz * rx - tx * rz);
+        const GLfloat sz(tx * ry - ty * rx);
+
+        // Check axis length
+        const GLfloat s2(sx * sx + sy * sy + sz * sz);
+        if (s2 == 0.0f)
+            return tv;
+
+        // Transformation matrix of rotation
+        Matrix rv;
+        rv.loadIdentity();
+
+        // r axis normalized and stored in array variable
+        const GLfloat r(sqrt(rx * rx + ry * ry + rz * rz));
+        rv[0] = rx / r;
+        rv[4] = ry / r;
+        rv[8] = rz / r;
+
+        // s-axis normalized and stored in array variables
+        const GLfloat s(sqrt(s2));
+        rv[1] = sx / s;
+        rv[5] = sy / s;
+        rv[9] = sz / s;
+
+        // t-axis normalized and stored in array variables
+        const GLfloat t(sqrt(tx * tx + ty * ty + tz * tz));
+        rv[2] = tx / t;
+        rv[6] = ty / t;
+        rv[10] = tz / t;
+
+        // Multiply the transformation matrix of the translation of the viewpoint
+        // by the transformation matrix of the rotation of the gaze
+        return rv * tv;
+    }
+
     // Multiplication
     Matrix operator*(const Matrix &m) const {
         Matrix t;
