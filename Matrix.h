@@ -12,7 +12,7 @@ class Matrix {
 
     // Constructor initialized with the contents of an array
     //  a: 16-element array of GLfloat type
-    Matrix(const GLfloat *a) { std::copy(a, a + 16, matrix); }
+    explicit Matrix(const GLfloat *a) { std::copy(a, a + 16, matrix); }
 
     // Referring to an element of a matrix as the right-hand side value
     const GLfloat &operator[](std::size_t i) const { return matrix[i]; }
@@ -144,6 +144,65 @@ class Matrix {
             const int j(i & 3), k(i & ~3);
             t[i] = matrix[0 + j] * m[k + 0] + matrix[4 + j] * m[k + 1] + matrix[8 + j] * m[k + 2] +
                    matrix[12 + j] * m[k + 3];
+        }
+        return t;
+    }
+
+    // Create the orthogonal projection transformation matrix
+    static Matrix orthogonal(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar) {
+        Matrix t;
+        const GLfloat dx(right - left);
+        const GLfloat dy(top - bottom);
+        const GLfloat dz(zFar - zNear);
+
+        if (dx != 0.0f && dy != 0.0f && dz != 0.0f) {
+            t.loadIdentity();
+            t[0] = 2.0f / dx;
+            t[5] = 2.0f / dy;
+            t[10] = -2.0f / dz;
+            t[12] = -(right + left) / dx;
+            t[13] = -(top + bottom) / dy;
+            t[14] = -(zFar - zNear) / dz;
+        }
+
+        return t;
+    }
+
+    // Create the perspective projection transformation matrix
+    static Matrix frustum(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar) {
+        Matrix t;
+        const GLfloat dx(right - left);
+        const GLfloat dy(top - bottom);
+        const GLfloat dz(zFar - zNear);
+
+        if (dx != 0.0f && dy != 0.0f && dz != 0.0f) {
+            t.loadIdentity();
+            t[0] = 2.0f * zNear / dx;
+            t[5] = 2.0f * zNear / dy;
+            t[8] = (right + left) / dx;
+            t[9] = (top + bottom) / dy;
+            t[10] = -(zFar + zNear) / dz;
+            t[11] = -1.0f;
+            t[14] = -2.0f * zFar * zNear / dz;
+            t[15] = 0.0f;
+        }
+
+        return t;
+    }
+
+    // Create the perspective projection transformation matrix by specifying the angle of view
+    static Matrix perspective(GLfloat fovy, GLfloat aspect, GLfloat zNear, GLfloat zFar) {
+        Matrix t;
+        const GLfloat dz(zFar - zNear);
+
+        if (dz != 0.0f) {
+            t.loadIdentity();
+            t[5] = 1.0f / tan(fovy * 0.5f);
+            t[0] = t[5] / aspect;
+            t[10] = -(zFar + zNear) / dz;
+            t[11] = -1.0f;
+            t[14] = -2.0f * zFar * zNear / dz;
+            t[15] = 0.0f;
         }
         return t;
     }
