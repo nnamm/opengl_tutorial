@@ -163,6 +163,12 @@ constexpr Object::Vertex rectangleVertex[] = {
     {-0.5f, 0.5f},
 };
 
+// Octahedron vertex position
+constexpr Object::Vertex octahedronVertex[] = {{0.0f, 1.0f, 0.0f},  {-1.0f, 0.0f, 0.0f}, {0.0f, -1.0f, 0.0f},
+                                               {1.0f, 0.0f, 0.0f},  {0.0f, 1.0f, 0.0f},  {0.0f, 0.0f, 1.0f},
+                                               {0.0f, -1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {-1.0f, 0.0f, 0.0f},
+                                               {0.0f, 0.0f, 1.0f},  {1.0f, 0.0f, 0.0f},  {0.0f, 0.0f, -1.0f}};
+
 int main() {
     // Initialize GLFW
     if (glfwInit() == GL_FALSE) {
@@ -191,7 +197,8 @@ int main() {
     const GLint projectionLoc(glGetUniformLocation(program, "projection"));
 
     // Create graphic data
-    std::unique_ptr<const Shape> shape(new Shape(2, 4, rectangleVertex));
+    //    std::unique_ptr<const Shape> shape(new Shape(2, 4, rectangleVertex));
+    std::unique_ptr<const Shape> shape(new Shape(3, 12, octahedronVertex));
 
     // Repeat while the window is open
     while (window) {

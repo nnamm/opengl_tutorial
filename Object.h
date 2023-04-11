@@ -12,7 +12,7 @@ class Object {
     // Vertex attribute
     struct Vertex {
         // Position
-        GLfloat position[2];
+        GLfloat position[3];
     };
 
     // Constructor
