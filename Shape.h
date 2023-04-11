@@ -15,8 +15,11 @@ class Shape {
     //   size       : Dimension of the vertex position
     //   vertexcount: Number of vertices
     //   vertex     : Array containing the vertex attributes
-    Shape(GLint size, GLsizei vertexcount, const Object::Vertex *vertex)
-        : object(new Object(size, vertexcount, vertex)), vertexcount(vertexcount) {}
+    //   indexcount : Number of elements at the vertex index
+    //   index      : Array containing the indices of the vertices
+    Shape(GLint size, GLsizei vertexcount, const Object::Vertex *vertex, GLsizei indexcount = 0,
+          const GLuint *index = nullptr)
+        : object(new Object(size, vertexcount, vertex, indexcount, index)), vertexcount(vertexcount) {}
 
     void draw() const {
         // Merge vertex array object

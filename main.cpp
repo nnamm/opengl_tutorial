@@ -1,5 +1,6 @@
 #include "Matrix.h"
 #include "Shape.h"
+#include "ShapeIndex.h"
 #include "Window.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -163,6 +164,40 @@ constexpr Object::Vertex rectangleVertex[] = {
     {-0.5f, 0.5f},
 };
 
+// Octahedron vertex position
+constexpr Object::Vertex octahedronVertex[] = {{0.0f, 1.0f, 0.0f},  {-1.0f, 0.0f, 0.0f}, {0.0f, -1.0f, 0.0f},
+                                               {1.0f, 0.0f, 0.0f},  {0.0f, 1.0f, 0.0f},  {0.0f, 0.0f, 1.0f},
+                                               {0.0f, -1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {-1.0f, 0.0f, 0.0f},
+                                               {0.0f, 0.0f, 1.0f},  {1.0f, 0.0f, 0.0f},  {0.0f, 0.0f, -1.0f}};
+
+// Hexahedron vertex position
+constexpr Object::Vertex cubeVertex[] = {
+    {-1.0f, -1.0f, -1.0f}, // (0)
+    {-1.0f, -1.0f, 1.0f},  // (1)
+    {-1.0f, 1.0f, 1.0f},   // (2)
+    {-1.0f, 1.0f, -1.0f},  // (3)
+    {1.0f, 1.0f, -1.0f},   // (4)
+    {1.0f, -1.0f, -1.0f},  // (5)
+    {1.0f, -1.0f, 1.0f},   // (6)
+    {1.0f, 1.0f, 1.0f}     // (7)
+};
+
+// Index of both end points of the hexahedron ridge
+constexpr GLuint wireCubeIndex[] = {
+    1, 0, // (a)
+    2, 7, // (b)
+    3, 0, // (c)
+    4, 7, // (d)
+    5, 0, // (e)
+    6, 7, // (f)
+    1, 2, // (g)
+    2, 3, // (h)
+    3, 4, // (i)
+    4, 5, // (j)
+    5, 6, // (k)
+    6, 1  // (l)
+};
+
 int main() {
     // Initialize GLFW
     if (glfwInit() == GL_FALSE) {
@@ -191,7 +226,7 @@ int main() {
     const GLint projectionLoc(glGetUniformLocation(program, "projection"));
 
     // Create graphic data
-    std::unique_ptr<const Shape> shape(new Shape(2, 4, rectangleVertex));
+    std::unique_ptr<const Shape> shape(new ShapeIndex(3, 8, cubeVertex, 24, wireCubeIndex));
 
     // Repeat while the window is open
     while (window) {
@@ -200,12 +235,6 @@ int main() {
 
         // Start using shader program
         glUseProgram(program);
-
-        // // Calculate the orthogonal projection transformation matrix
-        // const GLfloat *const size(window.getSize());
-        // const GLfloat scale(window.getScale() * 2.0f);
-        // const GLfloat w(size[0] / scale), h(size[1] / scale);
-        // const Matrix projection(Matrix::orthogonal(-w, w, -h, h, 1.0f, 10.0f));
 
         // Calculate the perspective projection transformation matrix
         const GLfloat *const size(window.getSize());
