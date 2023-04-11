@@ -8,6 +8,9 @@ class Object {
     // Vertex buffer object name
     GLuint vbo{};
 
+    // Index vertex buffer object
+    GLuint ibo{};
+
   public:
     // Vertex attribute
     struct Vertex {
@@ -19,7 +22,10 @@ class Object {
     //   size       : Dimension of the vertex position
     //   vertexcount: Number of vertices
     //   vertex     : Array containing the vertex attributes
-    Object(GLint size, GLsizei vertexcount, const Vertex *vertex) {
+    //   indexcount : Number of elements at the vertex index
+    //   index      : Array containing the indices of the vertices
+    Object(GLint size, GLsizei vertexcount, const Vertex *vertex, GLsizei indexcount = 0,
+           const GLuint *index = nullptr) {
         // Vertex array object
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
@@ -32,15 +38,18 @@ class Object {
         // Allow bound vertex buffer object to be reference from the in-variable
         glVertexAttribPointer(0, size, GL_FLOAT, GL_FALSE, 0, nullptr);
         glEnableVertexAttribArray(0);
+
+        // Index vertex buffer object
+        glGenBuffers(1, &ibo);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexcount * sizeof(GLuint), index, GL_STATIC_DRAW);
     }
 
     // Destructor
     virtual ~Object() {
-        // Delete vao
         glDeleteVertexArrays(1, &vao);
-
-        // Delete vbo
         glDeleteBuffers(1, &vbo);
+        glDeleteBuffers(1, &ibo);
     }
 
   private:
