@@ -92,6 +92,7 @@ GLuint createProgram(const char *vsrc, const char *fsrc) {
 
     // Link program object
     glBindAttribLocation(program, 0, "position");
+    glBindAttribLocation(program, 1, "color");
     glBindFragDataLocation(program, 0, "fragment");
     glLinkProgram(program);
 
@@ -157,29 +158,29 @@ bool loadProgram(const char *vert, const char *frag) {
 }
 
 //  Rectangle vertex position
-constexpr Object::Vertex rectangleVertex[] = {
-    {-0.5f, -0.5f},
-    {0.5f, -0.5f},
-    {0.5f, 0.5f},
-    {-0.5f, 0.5f},
-};
+// constexpr Object::Vertex rectangleVertex[] = {
+//    {-0.5f, -0.5f},
+//    {0.5f, -0.5f},
+//    {0.5f, 0.5f},
+//    {-0.5f, 0.5f},
+//};
 
 // Octahedron vertex position
-constexpr Object::Vertex octahedronVertex[] = {{0.0f, 1.0f, 0.0f},  {-1.0f, 0.0f, 0.0f}, {0.0f, -1.0f, 0.0f},
-                                               {1.0f, 0.0f, 0.0f},  {0.0f, 1.0f, 0.0f},  {0.0f, 0.0f, 1.0f},
-                                               {0.0f, -1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {-1.0f, 0.0f, 0.0f},
-                                               {0.0f, 0.0f, 1.0f},  {1.0f, 0.0f, 0.0f},  {0.0f, 0.0f, -1.0f}};
+// constexpr Object::Vertex octahedronVertex[] = {{0.0f, 1.0f, 0.0f},  {-1.0f, 0.0f, 0.0f}, {0.0f, -1.0f, 0.0f},
+//                                               {1.0f, 0.0f, 0.0f},  {0.0f, 1.0f, 0.0f},  {0.0f, 0.0f, 1.0f},
+//                                               {0.0f, -1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {-1.0f, 0.0f, 0.0f},
+//                                               {0.0f, 0.0f, 1.0f},  {1.0f, 0.0f, 0.0f},  {0.0f, 0.0f, -1.0f}};
 
-// Hexahedron vertex position
+// Hexahedron vertex position and color
 constexpr Object::Vertex cubeVertex[] = {
-    {-1.0f, -1.0f, -1.0f}, // (0)
-    {-1.0f, -1.0f, 1.0f},  // (1)
-    {-1.0f, 1.0f, 1.0f},   // (2)
-    {-1.0f, 1.0f, -1.0f},  // (3)
-    {1.0f, 1.0f, -1.0f},   // (4)
-    {1.0f, -1.0f, -1.0f},  // (5)
-    {1.0f, -1.0f, 1.0f},   // (6)
-    {1.0f, 1.0f, 1.0f}     // (7)
+    {{-1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, 0.0f}}, // (0)
+    {{-1.0f, -1.0f, 1.0f}, {0.0f, 0.0f, 0.8f}},  // (1)
+    {{-1.0f, 1.0f, 1.0f}, {0.0f, 0.8f, 0.0f}},   // (2)
+    {{-1.0f, 1.0f, -1.0f}, {0.0f, 0.8f, 0.8f}},  // (3)
+    {{1.0f, 1.0f, -1.0f}, {0.8f, 0.0f, 0.0f}},   // (4)
+    {{1.0f, -1.0f, -1.0f}, {0.8f, 0.0f, 0.8f}},  // (5)
+    {{1.0f, -1.0f, 1.0f}, {0.8f, 0.8f, 0.0f}},   // (6)
+    {{1.0f, 1.0f, 1.0f}, {0.8f, 0.8f, 0.8f}}     // (7)
 };
 
 // Index of both end points of the hexahedron ridge
