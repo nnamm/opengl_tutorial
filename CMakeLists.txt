@@ -9,7 +9,7 @@ if (APPLE)
 elseif (UNIX)
 endif ()
 
-add_executable(sample main.cpp Object.h Shape.h Window.h Matrix.h ShapeIndex.h)
+add_executable(sample main.cpp Object.h Shape.h Window.h Matrix.h ShapeIndex.h SolidShapeIndex.h)
 
 target_compile_options(sample PRIVATE -g -Wall --pedantic-errors)
 

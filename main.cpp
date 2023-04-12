@@ -1,6 +1,7 @@
 #include "Matrix.h"
 #include "Shape.h"
 #include "ShapeIndex.h"
+#include "SolidShapeIndex.h"
 #include "Window.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -184,19 +185,29 @@ constexpr Object::Vertex cubeVertex[] = {
 };
 
 // Index of both end points of the hexahedron ridge
-constexpr GLuint wireCubeIndex[] = {
-    1, 0, // (a)
-    2, 7, // (b)
-    3, 0, // (c)
-    4, 7, // (d)
-    5, 0, // (e)
-    6, 7, // (f)
-    1, 2, // (g)
-    2, 3, // (h)
-    3, 4, // (i)
-    4, 5, // (j)
-    5, 6, // (k)
-    6, 1  // (l)
+// constexpr GLuint wireCubeIndex[] = {
+//    1, 0, // (a)
+//    2, 7, // (b)
+//    3, 0, // (c)
+//    4, 7, // (d)
+//    5, 0, // (e)
+//    6, 7, // (f)
+//    1, 2, // (g)
+//    2, 3, // (h)
+//    3, 4, // (i)
+//    4, 5, // (j)
+//    5, 6, // (k)
+//    6, 1  // (l)
+//};
+
+// Index of triangularity vertices that fill the faces with a hexahedron
+constexpr GLuint solidCubeIndex[] = {
+    0, 1, 2, 0, 2, 3, // Left
+    0, 3, 4, 0, 4, 5, // Back
+    0, 5, 6, 0, 6, 1, // Under
+    7, 6, 5, 7, 5, 4, // Right
+    7, 4, 3, 7, 3, 2, // Up
+    7, 2, 1, 7, 1, 6, // Front
 };
 
 int main() {
@@ -227,7 +238,7 @@ int main() {
     const GLint projectionLoc(glGetUniformLocation(program, "projection"));
 
     // Create graphic data
-    std::unique_ptr<const Shape> shape(new ShapeIndex(3, 8, cubeVertex, 24, wireCubeIndex));
+    std::unique_ptr<const Shape> shape(new SolidShapeIndex(3, 8, cubeVertex, 36, solidCubeIndex));
 
     // Repeat while the window is open
     while (window) {
