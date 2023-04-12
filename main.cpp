@@ -1,6 +1,8 @@
 #include "Matrix.h"
 #include "Shape.h"
 #include "ShapeIndex.h"
+#include "SolidShape.h"
+#include "SolidShapeIndex.h"
 #include "Window.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -152,51 +154,62 @@ bool loadProgram(const char *vert, const char *frag) {
     const bool fstat(readShaderSource(frag, fsrc));
 
     // Create program object
-    //    return vstat && fstat ? createProgram(vsrc.data(), fsrc.data()) : 0;
-    //    return vstat && fstat ? createProgram(vsrc.data(), fsrc.data()) : false;
     return vstat && fstat && createProgram(vsrc.data(), fsrc.data());
 }
 
-//  Rectangle vertex position
-// constexpr Object::Vertex rectangleVertex[] = {
-//    {-0.5f, -0.5f},
-//    {0.5f, -0.5f},
-//    {0.5f, 0.5f},
-//    {-0.5f, 0.5f},
-//};
+// Vertex attributes of a hexahedron with a different color for each face
+constexpr Object::Vertex solidCubeVertex[] = {
+    // Left
+    {{-1.0f, -1.0f, -1.0f}, {0.1f, 0.8f, 0.1f}},
+    {{-1.0f, -1.0f, 1.0f}, {0.1f, 0.8f, 0.1f}},
+    {{-1.0f, 1.0f, 1.0f}, {0.1f, 0.8f, 0.1f}},
+    {{-1.0f, -1.0f, -1.0f}, {0.1f, 0.8f, 0.1f}},
+    {{-1.0f, 1.0f, 1.0f}, {0.1f, 0.8f, 0.1f}},
+    {{-1.0f, 1.0f, -1.0f}, {0.1f, 0.8f, 0.1f}},
+    // Back
+    {{1.0f, -1.0f, -1.0f}, {0.8f, 0.1f, 0.8f}},
+    {{-1.0f, -1.0f, -1.0f}, {0.8f, 0.1f, 0.8f}},
+    {{-1.0f, 1.0f, -1.0f}, {0.8f, 0.1f, 0.8f}},
+    {{1.0f, -1.0f, -1.0f}, {0.8f, 0.1f, 0.8f}},
+    {{-1.0f, 1.0f, -1.0f}, {0.8f, 0.1f, 0.8f}},
+    {{1.0f, 1.0f, -1.0f}, {0.8f, 0.1f, 0.8f}},
+    // Under
+    {{-1.0f, -1.0f, -1.0f}, {0.1f, 0.8f, 0.8f}},
+    {{1.0f, -1.0f, -1.0f}, {0.1f, 0.8f, 0.8f}},
+    {{1.0f, -1.0f, 1.0f}, {0.1f, 0.8f, 0.8f}},
+    {{-1.0f, -1.0f, -1.0f}, {0.1f, 0.8f, 0.8f}},
+    {{1.0f, -1.0f, 1.0f}, {0.1f, 0.8f, 0.8f}},
+    {{-1.0f, -1.0f, 1.0f}, {0.1f, 0.8f, 0.8f}},
+    // Right
+    {{1.0f, -1.0f, 1.0f}, {0.1f, 0.1f, 0.8f}},
+    {{1.0f, -1.0f, -1.0f}, {0.1f, 0.1f, 0.8f}},
+    {{1.0f, 1.0f, -1.0f}, {0.1f, 0.1f, 0.8f}},
+    {{1.0f, -1.0f, 1.0f}, {0.1f, 0.1f, 0.8f}},
+    {{1.0f, 1.0f, -1.0f}, {0.1f, 0.1f, 0.8f}},
+    {{1.0f, 1.0f, 1.0f}, {0.1f, 0.1f, 0.8f}},
+    // Up
+    {{-1.0f, 1.0f, -1.0f}, {0.8f, 0.1f, 0.1f}},
+    {{-1.0f, 1.0f, 1.0f}, {0.8f, 0.1f, 0.1f}},
+    {{1.0f, 1.0f, 1.0f}, {0.8f, 0.1f, 0.1f}},
+    {{-1.0f, 1.0f, -1.0f}, {0.8f, 0.1f, 0.1f}},
+    {{1.0f, 1.0f, 1.0f}, {0.8f, 0.1f, 0.1f}},
+    {{1.0f, 1.0f, -1.0f}, {0.8f, 0.1f, 0.1f}},
+    // Front
+    {{-1.0f, -1.0f, 1.0f}, {0.8f, 0.8f, 0.1f}},
+    {{1.0f, -1.0f, 1.0f}, {0.8f, 0.8f, 0.1f}},
+    {{1.0f, 1.0f, 1.0f}, {0.8f, 0.8f, 0.1f}},
+    {{-1.0f, -1.0f, 1.0f}, {0.8f, 0.8f, 0.1f}},
+    {{1.0f, 1.0f, 1.0f}, {0.8f, 0.8f, 0.1f}},
+    {{-1.0f, 1.0f, 1.0f}, {0.8f, 0.8f, 0.1f}}};
 
-// Octahedron vertex position
-// constexpr Object::Vertex octahedronVertex[] = {{0.0f, 1.0f, 0.0f},  {-1.0f, 0.0f, 0.0f}, {0.0f, -1.0f, 0.0f},
-//                                               {1.0f, 0.0f, 0.0f},  {0.0f, 1.0f, 0.0f},  {0.0f, 0.0f, 1.0f},
-//                                               {0.0f, -1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {-1.0f, 0.0f, 0.0f},
-//                                               {0.0f, 0.0f, 1.0f},  {1.0f, 0.0f, 0.0f},  {0.0f, 0.0f, -1.0f}};
-
-// Hexahedron vertex position and color
-constexpr Object::Vertex cubeVertex[] = {
-    {{-1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, 0.0f}}, // (0)
-    {{-1.0f, -1.0f, 1.0f}, {0.0f, 0.0f, 0.8f}},  // (1)
-    {{-1.0f, 1.0f, 1.0f}, {0.0f, 0.8f, 0.0f}},   // (2)
-    {{-1.0f, 1.0f, -1.0f}, {0.0f, 0.8f, 0.8f}},  // (3)
-    {{1.0f, 1.0f, -1.0f}, {0.8f, 0.0f, 0.0f}},   // (4)
-    {{1.0f, -1.0f, -1.0f}, {0.8f, 0.0f, 0.8f}},  // (5)
-    {{1.0f, -1.0f, 1.0f}, {0.8f, 0.8f, 0.0f}},   // (6)
-    {{1.0f, 1.0f, 1.0f}, {0.8f, 0.8f, 0.8f}}     // (7)
-};
-
-// Index of both end points of the hexahedron ridge
-constexpr GLuint wireCubeIndex[] = {
-    1, 0, // (a)
-    2, 7, // (b)
-    3, 0, // (c)
-    4, 7, // (d)
-    5, 0, // (e)
-    6, 7, // (f)
-    1, 2, // (g)
-    2, 3, // (h)
-    3, 4, // (i)
-    4, 5, // (j)
-    5, 6, // (k)
-    6, 1  // (l)
+// Index of triangularity vertices that fill the faces with a hexahedron
+constexpr GLuint solidCubeIndex[] = {
+    0,  1,  2,  3,  4,  5,  // Left
+    6,  7,  8,  9,  10, 11, // Back
+    12, 13, 14, 15, 16, 17, // Under
+    18, 19, 20, 21, 22, 23, // Right
+    24, 25, 26, 27, 28, 29, // Up
+    30, 31, 32, 33, 34, 35  // Front
 };
 
 int main() {
@@ -227,7 +240,7 @@ int main() {
     const GLint projectionLoc(glGetUniformLocation(program, "projection"));
 
     // Create graphic data
-    std::unique_ptr<const Shape> shape(new ShapeIndex(3, 8, cubeVertex, 24, wireCubeIndex));
+    std::unique_ptr<const Shape> shape(new SolidShapeIndex(3, 36, solidCubeVertex, 36, solidCubeIndex));
 
     // Repeat while the window is open
     while (window) {
