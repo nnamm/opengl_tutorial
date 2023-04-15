@@ -232,6 +232,16 @@ int main() {
     // Set background color
     glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
+    // Enable back-culling
+    glFrontFace(GL_CCW);
+    glCullFace(GL_BACK);
+    glEnable(GL_CULL_FACE);
+
+    // Enable depth-buffer
+    glClearDepth(1.0);
+    glDepthFunc(GL_LESS);
+    glEnable(GL_DEPTH_TEST);
+
     // Create program object
     const GLuint program(loadProgram("point.vert", "point.frag"));
 
@@ -242,10 +252,13 @@ int main() {
     // Create graphic data
     std::unique_ptr<const Shape> shape(new SolidShapeIndex(3, 36, solidCubeVertex, 36, solidCubeIndex));
 
+    // Set timer 0
+    glfwSetTime(0.0);
+
     // Repeat while the window is open
     while (window) {
         // Clear the window
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Start using shader program
         glUseProgram(program);
@@ -258,7 +271,8 @@ int main() {
 
         // Calculate the model transformation matrix
         const GLfloat *const location(window.getLocation());
-        const Matrix model(Matrix::translate(location[0], location[1], 0.0f));
+        const Matrix r(Matrix::rotate(static_cast<GLfloat>(glfwGetTime()), 0.0f, 1.0f, 0.0f));
+        const Matrix model(Matrix::translate(location[0], location[1], 0.0f) * r);
 
         // Calculate the view transformation matrix
         const Matrix view(Matrix::lookat(3.0f, 4.0f, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f));
@@ -270,6 +284,13 @@ int main() {
         glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, projection.data());
         glUniformMatrix4fv(modelviewLoc, 1, GL_FALSE, modelview.data());
 
+        // Drawing shape
+        shape->draw();
+
+        // Calculate the 2nd model view transformation matrix
+        const Matrix modelview1(modelview * Matrix::translate(0.0f, 0.0f, 3.0f));
+        // Set a value to uniform variable
+        glUniformMatrix4fv(modelviewLoc, 1, GL_FALSE, modelview1.data());
         // Drawing shape
         shape->draw();
 
