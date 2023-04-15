@@ -232,6 +232,11 @@ int main() {
     // Set background color
     glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
+    // Enable back culling
+    glFrontFace(GL_CCW);
+    glCullFace(GL_BACK);
+    glEnable(GL_CULL_FACE);
+
     // Create program object
     const GLuint program(loadProgram("point.vert", "point.frag"));
 
@@ -241,6 +246,9 @@ int main() {
 
     // Create graphic data
     std::unique_ptr<const Shape> shape(new SolidShapeIndex(3, 36, solidCubeVertex, 36, solidCubeIndex));
+
+    // Set timer 0
+    glfwSetTime(0.0);
 
     // Repeat while the window is open
     while (window) {
@@ -258,7 +266,8 @@ int main() {
 
         // Calculate the model transformation matrix
         const GLfloat *const location(window.getLocation());
-        const Matrix model(Matrix::translate(location[0], location[1], 0.0f));
+        const Matrix r(Matrix::rotate(static_cast<GLfloat>(glfwGetTime()), 0.0f, 1.0f, 0.0f));
+        const Matrix model(Matrix::translate(location[0], location[1], 0.0f) * r);
 
         // Calculate the view transformation matrix
         const Matrix view(Matrix::lookat(3.0f, 4.0f, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f));
