@@ -232,10 +232,15 @@ int main() {
     // Set background color
     glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
-    // Enable back culling
+    // Enable back-culling
     glFrontFace(GL_CCW);
     glCullFace(GL_BACK);
     glEnable(GL_CULL_FACE);
+
+    // Enable depth-buffer
+    glClearDepth(1.0);
+    glDepthFunc(GL_LESS);
+    glEnable(GL_DEPTH_TEST);
 
     // Create program object
     const GLuint program(loadProgram("point.vert", "point.frag"));
@@ -253,7 +258,7 @@ int main() {
     // Repeat while the window is open
     while (window) {
         // Clear the window
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Start using shader program
         glUseProgram(program);
@@ -279,6 +284,13 @@ int main() {
         glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, projection.data());
         glUniformMatrix4fv(modelviewLoc, 1, GL_FALSE, modelview.data());
 
+        // Drawing shape
+        shape->draw();
+
+        // Calculate the 2nd model view transformation matrix
+        const Matrix modelview1(modelview * Matrix::translate(0.0f, 0.0f, 3.0f));
+        // Set a value to uniform variable
+        glUniformMatrix4fv(modelviewLoc, 1, GL_FALSE, modelview1.data());
         // Drawing shape
         shape->draw();
 
