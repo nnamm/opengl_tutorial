@@ -94,7 +94,7 @@ GLuint createProgram(const char *vsrc, const char *fsrc) {
 
     // Link program object
     glBindAttribLocation(program, 0, "position");
-    glBindAttribLocation(program, 1, "color");
+    glBindAttribLocation(program, 1, "normal");
     glBindFragDataLocation(program, 0, "fragment");
     glLinkProgram(program);
 
@@ -157,50 +157,50 @@ bool loadProgram(const char *vert, const char *frag) {
     return vstat && fstat && createProgram(vsrc.data(), fsrc.data());
 }
 
-// Vertex attributes of a hexahedron with a different color for each face
+// Vertex attributes of a hexahedron with a different normal for each face
 constexpr Object::Vertex solidCubeVertex[] = {
     // Left
-    {{-1.0f, -1.0f, -1.0f}, {0.1f, 0.8f, 0.1f}},
-    {{-1.0f, -1.0f, 1.0f}, {0.1f, 0.8f, 0.1f}},
-    {{-1.0f, 1.0f, 1.0f}, {0.1f, 0.8f, 0.1f}},
-    {{-1.0f, -1.0f, -1.0f}, {0.1f, 0.8f, 0.1f}},
-    {{-1.0f, 1.0f, 1.0f}, {0.1f, 0.8f, 0.1f}},
-    {{-1.0f, 1.0f, -1.0f}, {0.1f, 0.8f, 0.1f}},
+    {{-1.0f, -1.0f, -1.0f}, {-1.0f, 0.0f, 0.0f}},
+    {{-1.0f, -1.0f, 1.0f}, {-1.0f, 0.0f, 0.0f}},
+    {{-1.0f, 1.0f, 1.0f}, {-1.0f, 0.0f, 0.0f}},
+    {{-1.0f, -1.0f, -1.0f}, {-1.0f, 0.0f, 0.0f}},
+    {{-1.0f, 1.0f, 1.0f}, {-1.0f, 0.0f, 0.0f}},
+    {{-1.0f, 1.0f, -1.0f}, {-1.0f, 0.0f, 0.0f}},
     // Back
-    {{1.0f, -1.0f, -1.0f}, {0.8f, 0.1f, 0.8f}},
-    {{-1.0f, -1.0f, -1.0f}, {0.8f, 0.1f, 0.8f}},
-    {{-1.0f, 1.0f, -1.0f}, {0.8f, 0.1f, 0.8f}},
-    {{1.0f, -1.0f, -1.0f}, {0.8f, 0.1f, 0.8f}},
-    {{-1.0f, 1.0f, -1.0f}, {0.8f, 0.1f, 0.8f}},
-    {{1.0f, 1.0f, -1.0f}, {0.8f, 0.1f, 0.8f}},
+    {{1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}},
+    {{-1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}},
+    {{-1.0f, 1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}},
+    {{1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}},
+    {{-1.0f, 1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}},
+    {{1.0f, 1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}},
     // Under
-    {{-1.0f, -1.0f, -1.0f}, {0.1f, 0.8f, 0.8f}},
-    {{1.0f, -1.0f, -1.0f}, {0.1f, 0.8f, 0.8f}},
-    {{1.0f, -1.0f, 1.0f}, {0.1f, 0.8f, 0.8f}},
-    {{-1.0f, -1.0f, -1.0f}, {0.1f, 0.8f, 0.8f}},
-    {{1.0f, -1.0f, 1.0f}, {0.1f, 0.8f, 0.8f}},
-    {{-1.0f, -1.0f, 1.0f}, {0.1f, 0.8f, 0.8f}},
+    {{-1.0f, -1.0f, -1.0f}, {0.0f, -1.0f, 0.0f}},
+    {{1.0f, -1.0f, -1.0f}, {0.0f, -1.0f, 0.0f}},
+    {{1.0f, -1.0f, 1.0f}, {0.0f, -1.0f, 0.0f}},
+    {{-1.0f, -1.0f, -1.0f}, {0.0f, -1.0f, 0.0f}},
+    {{1.0f, -1.0f, 1.0f}, {0.0f, -1.0f, 0.0f}},
+    {{-1.0f, -1.0f, 1.0f}, {0.0f, -1.0f, 0.0f}},
     // Right
-    {{1.0f, -1.0f, 1.0f}, {0.1f, 0.1f, 0.8f}},
-    {{1.0f, -1.0f, -1.0f}, {0.1f, 0.1f, 0.8f}},
-    {{1.0f, 1.0f, -1.0f}, {0.1f, 0.1f, 0.8f}},
-    {{1.0f, -1.0f, 1.0f}, {0.1f, 0.1f, 0.8f}},
-    {{1.0f, 1.0f, -1.0f}, {0.1f, 0.1f, 0.8f}},
-    {{1.0f, 1.0f, 1.0f}, {0.1f, 0.1f, 0.8f}},
+    {{1.0f, -1.0f, 1.0f}, {1.0f, 0.0f, 0.0f}},
+    {{1.0f, -1.0f, -1.0f}, {1.0f, 0.0f, 0.0f}},
+    {{1.0f, 1.0f, -1.0f}, {1.0f, 0.0f, 0.0f}},
+    {{1.0f, -1.0f, 1.0f}, {1.0f, 0.0f, 0.0f}},
+    {{1.0f, 1.0f, -1.0f}, {1.0f, 0.0f, 0.0f}},
+    {{1.0f, 1.0f, 1.0f}, {1.0f, 0.0f, 0.0f}},
     // Up
-    {{-1.0f, 1.0f, -1.0f}, {0.8f, 0.1f, 0.1f}},
-    {{-1.0f, 1.0f, 1.0f}, {0.8f, 0.1f, 0.1f}},
-    {{1.0f, 1.0f, 1.0f}, {0.8f, 0.1f, 0.1f}},
-    {{-1.0f, 1.0f, -1.0f}, {0.8f, 0.1f, 0.1f}},
-    {{1.0f, 1.0f, 1.0f}, {0.8f, 0.1f, 0.1f}},
-    {{1.0f, 1.0f, -1.0f}, {0.8f, 0.1f, 0.1f}},
+    {{-1.0f, 1.0f, -1.0f}, {0.0f, 1.0f, 0.0f}},
+    {{-1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}},
+    {{1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}},
+    {{-1.0f, 1.0f, -1.0f}, {0.0f, 1.0f, 0.0f}},
+    {{1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}},
+    {{1.0f, 1.0f, -1.0f}, {0.0f, 1.0f, 0.0f}},
     // Front
-    {{-1.0f, -1.0f, 1.0f}, {0.8f, 0.8f, 0.1f}},
-    {{1.0f, -1.0f, 1.0f}, {0.8f, 0.8f, 0.1f}},
-    {{1.0f, 1.0f, 1.0f}, {0.8f, 0.8f, 0.1f}},
-    {{-1.0f, -1.0f, 1.0f}, {0.8f, 0.8f, 0.1f}},
-    {{1.0f, 1.0f, 1.0f}, {0.8f, 0.8f, 0.1f}},
-    {{-1.0f, 1.0f, 1.0f}, {0.8f, 0.8f, 0.1f}}};
+    {{-1.0f, -1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}},
+    {{1.0f, -1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}},
+    {{1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}},
+    {{-1.0f, -1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}},
+    {{1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}},
+    {{-1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}}};
 
 // Index of triangularity vertices that fill the faces with a hexahedron
 constexpr GLuint solidCubeIndex[] = {
@@ -248,6 +248,7 @@ int main() {
     // Get uniform variable location
     const GLint modelviewLoc(glGetUniformLocation(program, "modelview"));
     const GLint projectionLoc(glGetUniformLocation(program, "projection"));
+    const GLint normalMatrixLoc(glGetUniformLocation(program, "normalMatrix"));
 
     // Create graphic data
     std::unique_ptr<const Shape> shape(new SolidShapeIndex(3, 36, solidCubeVertex, 36, solidCubeIndex));
@@ -277,20 +278,33 @@ int main() {
         // Calculate the view transformation matrix
         const Matrix view(Matrix::lookat(3.0f, 4.0f, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f));
 
+        // Storage location of the transformation matrix of the normal vectors.
+        GLfloat normalMatrix[9];
+
         // Calculate the model view transformation matrix
         const Matrix modelview(view * model);
+
+        // Calculate the transformation matrix of normal vector
+        modelview.getNormalMatrix(normalMatrix);
 
         // Set a value to uniform variable
         glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, projection.data());
         glUniformMatrix4fv(modelviewLoc, 1, GL_FALSE, modelview.data());
+        glUniformMatrix3fv(normalMatrixLoc, 1, GL_FALSE, normalMatrix);
 
         // Drawing shape
         shape->draw();
 
         // Calculate the 2nd model view transformation matrix
         const Matrix modelview1(modelview * Matrix::translate(0.0f, 0.0f, 3.0f));
+
+        // Calculate the 2nd transformation matrix of normal vector
+        modelview1.getNormalMatrix(normalMatrix);
+
         // Set a value to uniform variable
         glUniformMatrix4fv(modelviewLoc, 1, GL_FALSE, modelview1.data());
+        glUniformMatrix3fv(normalMatrixLoc, 1, GL_FALSE, normalMatrix);
+
         // Drawing shape
         shape->draw();
 

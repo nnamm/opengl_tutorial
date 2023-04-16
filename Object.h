@@ -18,7 +18,7 @@ class Object {
         GLfloat position[3];
 
         // Color
-        GLfloat color[3];
+        GLfloat normal[3];
     };
 
     // Constructor
@@ -39,9 +39,9 @@ class Object {
         glBufferData(GL_ARRAY_BUFFER, vertexcount * sizeof(Vertex), vertex, GL_STATIC_DRAW);
 
         // Allow bound vertex buffer object to be reference from the in-variable
-        glVertexAttribPointer(0, size, GL_FLOAT, GL_FALSE, sizeof(Vertex), static_cast<Vertex *>(0)->position);
+        glVertexAttribPointer(0, size, GL_FLOAT, GL_FALSE, sizeof(Vertex), static_cast<Vertex *>(nullptr)->position);
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), static_cast<Vertex *>(0)->color);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), static_cast<Vertex *>(nullptr)->normal);
         glEnableVertexAttribArray(1);
 
         // Index vertex buffer object
