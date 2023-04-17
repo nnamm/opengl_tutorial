@@ -1,7 +1,7 @@
 #include "Matrix.h"
 #include "Shape.h"
-#include "ShapeIndex.h"
-#include "SolidShape.h"
+// #include "ShapeIndex.h"
+// #include "SolidShape.h"
 #include "SolidShapeIndex.h"
 #include "Window.h"
 #include <GL/glew.h>
@@ -19,8 +19,9 @@ GLboolean printShaderInfoLog(GLuint shader, const char *str) {
     // Get compilation result
     GLint status;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
-    if (status == GL_FALSE)
+    if (status == GL_FALSE) {
         std::cerr << "Compile Error in " << str << std::endl;
+    }
 
     // Get log length when shader is compiled
     GLsizei bufSize;
@@ -43,8 +44,9 @@ GLboolean printProgramInfoLog(GLuint program) {
     // Get link result
     GLint status;
     glGetProgramiv(program, GL_LINK_STATUS, &status);
-    if (status == GL_FALSE)
+    if (status == GL_FALSE) {
         std::cerr << "Link Error." << std::endl;
+    }
 
     // Get log length when linking shader
     GLsizei bufSize;
@@ -75,8 +77,9 @@ GLuint createProgram(const char *vsrc, const char *fsrc) {
         glCompileShader(vobj);
 
         // Embed shader object of vertex shader into program object
-        if (printShaderInfoLog(vobj, "vertex shader"))
+        if (printShaderInfoLog(vobj, "vertex shader")) {
             glAttachShader(program, vobj);
+        }
         glDeleteShader(vobj);
     }
 
@@ -87,8 +90,9 @@ GLuint createProgram(const char *vsrc, const char *fsrc) {
         glCompileShader(fobj);
 
         // Embed shader object of fragment shader into program object
-        if (printShaderInfoLog(fobj, "fragment shader"))
+        if (printShaderInfoLog(fobj, "fragment shader")) {
             glAttachShader(program, fobj);
+        }
         glDeleteShader(fobj);
     }
 
@@ -99,8 +103,9 @@ GLuint createProgram(const char *vsrc, const char *fsrc) {
     glLinkProgram(program);
 
     // Return created program object
-    if (printProgramInfoLog(program))
+    if (printProgramInfoLog(program)) {
         return program;
+    }
 
     // Return 0, if program object cannot be created
     glDeleteProgram(program);
@@ -111,8 +116,9 @@ GLuint createProgram(const char *vsrc, const char *fsrc) {
 //   name  : Shader source file name
 //   buffer: Text of the loaded source file
 bool readShaderSource(const char *name, std::vector<GLchar> &buffer) {
-    if (name == nullptr)
+    if (name == nullptr) {
         return false;
+    }
 
     std::ifstream file(name, std::ios::binary);
     if (file.fail()) {
