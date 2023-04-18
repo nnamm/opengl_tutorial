@@ -6,6 +6,7 @@
 #include "Window.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <cmath>
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
@@ -164,59 +165,59 @@ bool loadProgram(const char *vert, const char *frag) {
 }
 
 // Vertex attributes of a hexahedron with a different normal for each face
-constexpr Object::Vertex solidCubeVertex[] = {
-    // Left
-    {{-1.0f, -1.0f, -1.0f}, {-1.0f, 0.0f, 0.0f}},
-    {{-1.0f, -1.0f, 1.0f}, {-1.0f, 0.0f, 0.0f}},
-    {{-1.0f, 1.0f, 1.0f}, {-1.0f, 0.0f, 0.0f}},
-    {{-1.0f, -1.0f, -1.0f}, {-1.0f, 0.0f, 0.0f}},
-    {{-1.0f, 1.0f, 1.0f}, {-1.0f, 0.0f, 0.0f}},
-    {{-1.0f, 1.0f, -1.0f}, {-1.0f, 0.0f, 0.0f}},
-    // Back
-    {{1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}},
-    {{-1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}},
-    {{-1.0f, 1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}},
-    {{1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}},
-    {{-1.0f, 1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}},
-    {{1.0f, 1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}},
-    // Under
-    {{-1.0f, -1.0f, -1.0f}, {0.0f, -1.0f, 0.0f}},
-    {{1.0f, -1.0f, -1.0f}, {0.0f, -1.0f, 0.0f}},
-    {{1.0f, -1.0f, 1.0f}, {0.0f, -1.0f, 0.0f}},
-    {{-1.0f, -1.0f, -1.0f}, {0.0f, -1.0f, 0.0f}},
-    {{1.0f, -1.0f, 1.0f}, {0.0f, -1.0f, 0.0f}},
-    {{-1.0f, -1.0f, 1.0f}, {0.0f, -1.0f, 0.0f}},
-    // Right
-    {{1.0f, -1.0f, 1.0f}, {1.0f, 0.0f, 0.0f}},
-    {{1.0f, -1.0f, -1.0f}, {1.0f, 0.0f, 0.0f}},
-    {{1.0f, 1.0f, -1.0f}, {1.0f, 0.0f, 0.0f}},
-    {{1.0f, -1.0f, 1.0f}, {1.0f, 0.0f, 0.0f}},
-    {{1.0f, 1.0f, -1.0f}, {1.0f, 0.0f, 0.0f}},
-    {{1.0f, 1.0f, 1.0f}, {1.0f, 0.0f, 0.0f}},
-    // Up
-    {{-1.0f, 1.0f, -1.0f}, {0.0f, 1.0f, 0.0f}},
-    {{-1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}},
-    {{1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}},
-    {{-1.0f, 1.0f, -1.0f}, {0.0f, 1.0f, 0.0f}},
-    {{1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}},
-    {{1.0f, 1.0f, -1.0f}, {0.0f, 1.0f, 0.0f}},
-    // Front
-    {{-1.0f, -1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}},
-    {{1.0f, -1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}},
-    {{1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}},
-    {{-1.0f, -1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}},
-    {{1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}},
-    {{-1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}}};
-
-// Index of triangularity vertices that fill the faces with a hexahedron
-constexpr GLuint solidCubeIndex[] = {
-    0,  1,  2,  3,  4,  5,  // Left
-    6,  7,  8,  9,  10, 11, // Back
-    12, 13, 14, 15, 16, 17, // Under
-    18, 19, 20, 21, 22, 23, // Right
-    24, 25, 26, 27, 28, 29, // Up
-    30, 31, 32, 33, 34, 35  // Front
-};
+// constexpr Object::Vertex solidCubeVertex[] = {
+//    // Left
+//    {{-1.0f, -1.0f, -1.0f}, {-1.0f, 0.0f, 0.0f}},
+//    {{-1.0f, -1.0f, 1.0f}, {-1.0f, 0.0f, 0.0f}},
+//    {{-1.0f, 1.0f, 1.0f}, {-1.0f, 0.0f, 0.0f}},
+//    {{-1.0f, -1.0f, -1.0f}, {-1.0f, 0.0f, 0.0f}},
+//    {{-1.0f, 1.0f, 1.0f}, {-1.0f, 0.0f, 0.0f}},
+//    {{-1.0f, 1.0f, -1.0f}, {-1.0f, 0.0f, 0.0f}},
+//    // Back
+//    {{1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}},
+//    {{-1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}},
+//    {{-1.0f, 1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}},
+//    {{1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}},
+//    {{-1.0f, 1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}},
+//    {{1.0f, 1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}},
+//    // Under
+//    {{-1.0f, -1.0f, -1.0f}, {0.0f, -1.0f, 0.0f}},
+//    {{1.0f, -1.0f, -1.0f}, {0.0f, -1.0f, 0.0f}},
+//    {{1.0f, -1.0f, 1.0f}, {0.0f, -1.0f, 0.0f}},
+//    {{-1.0f, -1.0f, -1.0f}, {0.0f, -1.0f, 0.0f}},
+//    {{1.0f, -1.0f, 1.0f}, {0.0f, -1.0f, 0.0f}},
+//    {{-1.0f, -1.0f, 1.0f}, {0.0f, -1.0f, 0.0f}},
+//    // Right
+//    {{1.0f, -1.0f, 1.0f}, {1.0f, 0.0f, 0.0f}},
+//    {{1.0f, -1.0f, -1.0f}, {1.0f, 0.0f, 0.0f}},
+//    {{1.0f, 1.0f, -1.0f}, {1.0f, 0.0f, 0.0f}},
+//    {{1.0f, -1.0f, 1.0f}, {1.0f, 0.0f, 0.0f}},
+//    {{1.0f, 1.0f, -1.0f}, {1.0f, 0.0f, 0.0f}},
+//    {{1.0f, 1.0f, 1.0f}, {1.0f, 0.0f, 0.0f}},
+//    // Up
+//    {{-1.0f, 1.0f, -1.0f}, {0.0f, 1.0f, 0.0f}},
+//    {{-1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}},
+//    {{1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}},
+//    {{-1.0f, 1.0f, -1.0f}, {0.0f, 1.0f, 0.0f}},
+//    {{1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}},
+//    {{1.0f, 1.0f, -1.0f}, {0.0f, 1.0f, 0.0f}},
+//    // Front
+//    {{-1.0f, -1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}},
+//    {{1.0f, -1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}},
+//    {{1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}},
+//    {{-1.0f, -1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}},
+//    {{1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}},
+//    {{-1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}}};
+//
+//// Index of triangularity vertices that fill the faces with a hexahedron
+// constexpr GLuint solidCubeIndex[] = {
+//     0,  1,  2,  3,  4,  5,  // Left
+//     6,  7,  8,  9,  10, 11, // Back
+//     12, 13, 14, 15, 16, 17, // Under
+//     18, 19, 20, 21, 22, 23, // Right
+//     24, 25, 26, 27, 28, 29, // Up
+//     30, 31, 32, 33, 34, 35  // Front
+// };
 
 int main() {
     // Initialize GLFW
@@ -256,8 +257,49 @@ int main() {
     const GLint projectionLoc(glGetUniformLocation(program, "projection"));
     const GLint normalMatrixLoc(glGetUniformLocation(program, "normalMatrix"));
 
+    // Number of sphere divisions
+    const int slices(16), stacks(8);
+
+    // Create vertex attributes
+    std::vector<Object::Vertex> solidSphereVertex;
+    for (int j = 0; j <= stacks; ++j) {
+        const float t(static_cast<float>(j) / static_cast<float>(stacks));
+        const float y(cos(3.141593f * t)), r(sin(3.141593f * t));
+        for (int i = 0; i <= slices; ++i) {
+            const float s(static_cast<float>(i) / static_cast<float>(slices));
+            const float z(r * cos(6.283185f * s)), x(r * sin(6.283185f * s));
+            // Vertex attributes
+            const Object::Vertex v = {{x, y, z}, {x, y, z}};
+            // Add vertex attributes
+            solidSphereVertex.emplace_back(v);
+        }
+    }
+
+    // Create indices
+    std::vector<GLuint> solidSphereIndex;
+    for (int j = 0; j < stacks; ++j) {
+        const int k((slices + 1) * j);
+        for (int i = 0; i < slices; ++i) {
+            // Vertex index
+            const GLuint k0(k + i);
+            const GLuint k1(k0 + 1);
+            const GLuint k2(k1 + slices);
+            const GLuint k3(k2 + 1);
+            // Bottom left triangle
+            solidSphereIndex.emplace_back(k0);
+            solidSphereIndex.emplace_back(k2);
+            solidSphereIndex.emplace_back(k3);
+            // Upper right triangle
+            solidSphereIndex.emplace_back(k0);
+            solidSphereIndex.emplace_back(k3);
+            solidSphereIndex.emplace_back(k1);
+        }
+    }
+
     // Create graphic data
-    std::unique_ptr<const Shape> shape(new SolidShapeIndex(3, 36, solidCubeVertex, 36, solidCubeIndex));
+    std::unique_ptr<const Shape> shape(
+        new SolidShapeIndex(3, static_cast<GLsizei>(solidSphereVertex.size()), solidSphereVertex.data(),
+                            static_cast<GLsizei>(solidSphereIndex.size()), solidSphereIndex.data()));
 
     // Set timer 0
     glfwSetTime(0.0);
