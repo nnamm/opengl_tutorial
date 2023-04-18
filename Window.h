@@ -67,14 +67,16 @@ class Window {
         glfwPollEvents();
 
         // Check keyboard status
-        if (glfwGetKey(window, GLFW_KEY_LEFT) != GLFW_RELEASE)
+        if (glfwGetKey(window, GLFW_KEY_LEFT) != GLFW_RELEASE) {
             location[0] -= 2.0f / size[0];
-        else if (glfwGetKey(window, GLFW_KEY_RIGHT) != GLFW_RELEASE)
+        } else if (glfwGetKey(window, GLFW_KEY_RIGHT) != GLFW_RELEASE) {
             location[0] += 2.0f / size[0];
-        if (glfwGetKey(window, GLFW_KEY_DOWN) != GLFW_RELEASE)
+        }
+        if (glfwGetKey(window, GLFW_KEY_DOWN) != GLFW_RELEASE) {
             location[1] -= 2.0f / size[1];
-        else if (glfwGetKey(window, GLFW_KEY_UP) != GLFW_RELEASE)
+        } else if (glfwGetKey(window, GLFW_KEY_UP) != GLFW_RELEASE) {
             location[1] += 2.0f / size[1];
+        }
 
         // Check left mouse button
         if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) != GLFW_RELEASE) {

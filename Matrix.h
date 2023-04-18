@@ -120,8 +120,9 @@ class Matrix {
 
         // Check axis length
         const GLfloat s2(sx * sx + sy * sy + sz * sz);
-        if (s2 == 0.0f)
+        if (s2 == 0.0f) {
             return tv;
+        }
 
         // Transformation matrix of rotation
         Matrix rv;
