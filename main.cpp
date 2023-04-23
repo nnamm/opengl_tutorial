@@ -1,5 +1,6 @@
 #include "Matrix.h"
 #include "Shape.h"
+#include "Vector.h"
 // #include "ShapeIndex.h"
 // #include "SolidShape.h"
 #include "SolidShapeIndex.h"
@@ -256,6 +257,10 @@ int main() {
     const GLint modelviewLoc(glGetUniformLocation(program, "modelview"));
     const GLint projectionLoc(glGetUniformLocation(program, "projection"));
     const GLint normalMatrixLoc(glGetUniformLocation(program, "normalMatrix"));
+    const GLint LposLoc(glGetUniformLocation(program, "Lpos"));
+    const GLint LambLoc(glGetUniformLocation(program, "Lamb"));
+    const GLint LdiffLoc(glGetUniformLocation(program, "Ldiff"));
+    const GLint LspecLoc(glGetUniformLocation(program, "Lspec"));
 
     // Number of sphere divisions
     const int slices(16), stacks(8);
@@ -301,6 +306,13 @@ int main() {
         new SolidShapeIndex(3, static_cast<GLsizei>(solidSphereVertex.size()), solidSphereVertex.data(),
                             static_cast<GLsizei>(solidSphereIndex.size()), solidSphereIndex.data()));
 
+    // Light source data
+    static constexpr int Lcount(2);
+    static constexpr Vector Lpos[] = {{0.0f, 0.0f, 5.0f, 1.0f}, {8.0f, 0.0f, 0.0f, 1.0f}};
+    static constexpr GLfloat Lamb[] = {0.2f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f};
+    static constexpr GLfloat Ldiff[] = {1.0f, 0.5f, 0.5f, 0.9f, 0.9f, 0.9f};
+    static constexpr GLfloat Lspec[] = {1.0f, 0.5f, 0.5f, 0.9f, 0.9f, 0.9f};
+
     // Set timer 0
     glfwSetTime(0.0);
 
@@ -339,6 +351,12 @@ int main() {
         glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, projection.data());
         glUniformMatrix4fv(modelviewLoc, 1, GL_FALSE, modelview.data());
         glUniformMatrix3fv(normalMatrixLoc, 1, GL_FALSE, normalMatrix);
+        for (int i = 0; i < Lcount; ++i) {
+            glUniform4fv(LposLoc + i, 1, (view * Lpos[i]).data());
+        }
+        glUniform3fv(LambLoc, Lcount, Lamb);
+        glUniform3fv(LdiffLoc, Lcount, Ldiff);
+        glUniform3fv(LspecLoc, Lcount, Lspec);
 
         // Drawing shape
         shape->draw();
